@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<HTML>
+	<HEAD>
+
+		<TITLE>Getting Ready
+		</TITLE>
+		<STYLE>
+		body {
+		  font-family: Sans-Serif;
+		}
+		</STYLE>
+		<script language="JavaScript" src="http://www.geoplugin.net/javascript.gp" type="text/javascript"></script>
+		<script language="JavaScript">    
+			/*
+			  Author:		Robert Hashemian (http://www.hashemian.com/)
+			  Modified by:	Munsifali Rashid (http://www.munit.co.uk/)
+			  Modified by:	Tilesh Khatri
+			  See here: https://www.hashemian.com/tools/javascript-countdown.htm
+			*/
+			
+			function StartCountDown(myDiv,myTargetDate, dFormat)
+			{
+			  var dthen	= new Date(myTargetDate);
+			  var dnow	= new Date();
+			  ddiff		= new Date(dthen-dnow);
+			  gsecs		= Math.floor(ddiff.valueOf()/1000);
+			  CountBack(myDiv,gsecs, dFormat);
+			}
+			
+			function Calcage(secs, num1, num2)
+			{
+			  s = ((Math.floor(secs/num1))%num2).toString();
+			  if (s.length < 2) 
+			  {	
+				s = "0" + s;
+			  }
+			  return (s);
+			}
+			
+			function refreshClock(myDiv)
+			{
+			  var dnow	= new Date();
+
+			  document.getElementById(myDiv).innerHTML =  dnow;
+
+			  setTimeout("refreshClock('" + myDiv + "');",990);
+			}
+			function CountBack(myDiv, secs, dFormat)
+			{
+			  var DisplayStr;
+			  var DisplayFormat = (typeof dFormat === 'undefined' ? "%%D%% Days, %%H%%:%%M%%:%%S%%" : dFormat);
+			 
+			  DisplayStr = DisplayFormat;
+
+				if (Calcage(secs,86400,100000) != 0)
+				  DisplayStr = DisplayStr.replace(/%%D%%/g, "".concat(Calcage(secs,86400,100000)) );
+				else {
+				  DisplayStr = DisplayStr.replace(/%%D%%/g, "");
+				  DisplayStr = DisplayStr.replace(/Days, /g, "");
+				}
+
+			  DisplayStr = DisplayStr.replace(/%%D%%/g,	Calcage(secs,86400,100000));
+			  
+			  DisplayStr = DisplayStr.replace(/%%H%%/g,		Calcage(secs,3600,24));
+			  DisplayStr = DisplayStr.replace(/%%M%%/g,		Calcage(secs,60,60));
+			  DisplayStr = DisplayStr.replace(/%%S%%/g,		Calcage(secs,1,60));
+			  if(secs > 0)
+			  {	
+				document.getElementById(myDiv).innerHTML = DisplayStr;
+				if (typeof dFormat === 'undefined') {
+					setTimeout("CountBack('" + myDiv + "'," + (secs-1) + ");", 990);
+				} else {
+					setTimeout("CountBack('" + myDiv + "'," + (secs-1) + "," + '"' + dFormat + '"' + ");", 990);
+				}
+			  }
+			  else
+			  {
+				document.getElementById(myDiv).innerHTML = "Time's Up!";
+			  }
+			}
+		</script>
+	</HEAD>
+<BODY>
+<font style="sans-serif">
+<big><big><center><div id="$VER:">#[015]# Welcome/أهلاً to <span id="NowBox">_NowBox<script lang="javascript">refreshClock("NowBox");</script></span></div></center></big></big>
+<table>
+  <tr valign="top">
+    <td valign="top">
+      <table width="100%" height="47%" border="1">
+        <tr valign="top">
+        <td width="50%">
+          <center>
+          <big>
+          <big>
+          <big>
+          You have<br>
+          <big>
+          <big>
+            <div id="clock1">[clock1]</div>
+            <script lang="javascript">
+              var today	= new Date();
+              
+              //Extract the date and Format it to YYYY/MM/DD
+              var year = today.getFullYear();
+
+              // if the month is less than 10, add leading 0; value is zero based
+              var month = ((today.getMonth() + 1) < 10 ? '0' : '')
+                          + (today.getMonth() + 1) ;  
+
+              // if the day is less than 10, add leading 0; value is non-zero based
+              var day = ((today.getDate()) < 10 ? '0' : '')
+                          + (today.getDate()) ;   
+
+              var todaysEnd = month + '/' + day + '/'+ year + " 11:00 PM";
+              StartCountDown("clock1",todaysEnd)// -0400")
+            </script>
+          </big>
+          </big>
+          </big>
+          Left before end of day
+          </big>
+          </big>
+          </center>
+        </td>
+          </tr>
+          <tr>
+          <td>
+			<div id="coords">
+			</div> 	
+			<div id="prayers">
+			@Prayers
+			</div>
+
+			<script type="text/javascript" src="http://praytimes.org/code/v2/js/PrayTimes.js"></script>
+			<!-- script type="text/javascript" src="PrayTimes.js"></script -->
+			<script>
+			var xLat	= 0;
+			var xLong	= 0;
+			
+			var x = document.getElementById("coords");
+			
+			function initPrayerTimes(_lat,_long) {
+					prayTimes.setMethod('ISNA');
+					var pTimes = prayTimes.getTimes(new Date(), [_lat, _long]) // -7;
+					var prayersBox = document.getElementById("prayers");
+					prayersBox.innerHTML = "<table width='100%'><tr>" +						
+						"<td>Fajr<td>"		+ pTimes.fajr	+ "<tr>" +
+						"<td>Sunrise<td>"	+ pTimes.sunrise+ "<tr>" +
+						"<td>Dhuhr<td>"		+ pTimes.dhuhr	+ "<tr>" +
+						"<td>3asr<td>"		+ pTimes.asr	+ "<tr>" +
+						"<td>Maghrib<td>"	+ pTimes.maghrib+ "<tr>" +
+						"<td>3isha'<td>"	+ pTimes.isha	+ "</table>";
+		
+			}
+			
+			initPrayerTimes(
+				geoplugin_latitude(),
+				geoplugin_longitude());
+
+			function getLocation() {
+			  if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(showPosition);
+			  } else {
+				x.innerHTML = "Geolocation is not supported by this browser.";
+			  }
+			}
+
+			function showPosition(position) {
+			  x.innerHTML = "🌎";/*"Latitude: " + position.coords.latitude +
+			  "<br>Longitude: " + position.coords.longitude;*/
+				initPrayerTimes(position.coords.latitude,position.coords.longitude);
+			}
+			
+
+			</script>
+			
+			<script>
+
+			// http://praytimes.org/manual/
+			getLocation()
+
+
+			//showPosition()
+
+			</script>
+			
+
+			
+          </td>
+          </tr>
+          <tr>
+        <td width="50%">
+          <center>
+          <big>
+          <big>
+          <big>
+          You have<br>
+          <big>
+          <big>
+            <div id="clock2">[clock2]</div>
+            <script lang="javascript">StartCountDown("clock2","08/30/2020 11:00 PM","%%D%% Days...")// -0400")
+            </script>
+          </big>
+          </big>
+          </big>
+          Left before end of the month
+          </big>
+          </big>
+          </center>
+        </td>
+        </tr>
+        <tr>
+          <td>
+                  <div>
+                    <iframe src="https://to-do.live.com/tasks/AQMkADAwATNiZmYAZC05YWEAOS00NWU4LTAwAi0wMAoALgAAA5tfs3ybhbtHhQhAEJS47MIBAM-DtqMlpwdCrxu0I5jh5AUAAxoF9QcAAAA=">
+                      todo list
+                    </iframe>
+                  </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <i>Shortcuts</i>
+            <ul>
+              <li><a href="https://bit.ly/scriptlets">scriptlets</a>
+              <li><a href="https://bit.ly/mk-prayerlog">mk-prayerlog</a>
+              <li><a href="https://bit.ly/grabgist">grabgist</a>
+            </ul>
+          </td>
+        </tr>
+        </table>
+    </td>
+    <td>
+      <div id="widgetmain" style="text-align:left;overflow-y:auto;overflow-x:hidden;width:1000px;background-color:#transparent; border:0px solid #333333;"><div id="rsswidget" style="height:240px;"><iframe src="http://us1.rssfeedwidget.com/getrss.php?time=1596929274508&amp;x=https%3A%2F%2Fwww.comicsrss.com%2Frss%2Fpeanuts.rss&amp;w=1000&amp;h=360&amp;bc=333333&amp;bw=0&amp;bgc=transparent&amp;m=14&amp;it=true&amp;t=(default)&amp;tc=CC5014&amp;ts=16&amp;tb=transparent&amp;il=true&amp;lc=0000FF&amp;ls=14&amp;lb=false&amp;id=true&amp;dc=4BC93C&amp;ds=14&amp;idt=false&amp;dtc=9E42A8&amp;dts=12" border="0" hspace="0" vspace="0" frameborder="no" marginwidth="0" marginheight="0" style="border:0; padding:0; margin:0; width:1000px; height:360px;" id="rssOutput">Reading RSS Feed ...</iframe></div><div style="text-align:right;margin-bottom:0;border-top:0px solid #333333;" id="widgetbottom"><span style="font-size:70%"><a href="http://www.rssfeedwidget.com">rss feed widget</a>&nbsp;</span><br></div></div>
+      <div id="widgetmain" style="text-align:left;overflow-y:auto;overflow-x:hidden;width:1000px;background-color:#transparent; border:0px solid #333333;"><div id="rsswidget" style="height:355px;"><iframe src="http://us1.rssfeedwidget.com/getrss.php?time=1596928636109&amp;x=https%3A%2F%2Fwww.comicsrss.com%2Frss%2Fgarfield.rss&amp;w=1000&amp;h=400&amp;bc=333333&amp;bw=0&amp;bgc=transparent&amp;m=14&amp;it=true&amp;t=(default)&amp;tc=CC5014&amp;ts=16&amp;tb=transparent&amp;il=true&amp;lc=0000FF&amp;ls=14&amp;lb=false&amp;id=true&amp;dc=4BC93C&amp;ds=14&amp;idt=false&amp;dtc=9E42A8&amp;dts=12" border="0" hspace="0" vspace="0" frameborder="no" marginwidth="0" marginheight="0" style="border:0; padding:0; margin:0; width:1000px; height:355px;" id="rssOutput">Reading RSS Feed ...</iframe></div><div style="text-align:right;margin-bottom:0;border-top:0px solid #333333;" id="widgetbottom"><span style="font-size:70%"><a href="http://www.rssfeedwidget.com">rss feed widget</a>&nbsp;</span><br></div></div>
+      <div id="widgetmain" style="text-align:left;overflow-y:auto;overflow-x:hidden;width:1000px;background-color:#transparent; border:0px solid #333333;"><div id="rsswidget" style="height:360px;"><iframe src="http://us1.rssfeedwidget.com/getrss.php?time=1596929274508&amp;x=https%3A%2F%2Fwww.comicsrss.com%2Frss%2Fdilbert.rss&amp;w=1000&amp;h=360&amp;bc=333333&amp;bw=0&amp;bgc=transparent&amp;m=14&amp;it=true&amp;t=(default)&amp;tc=CC5014&amp;ts=16&amp;tb=transparent&amp;il=true&amp;lc=0000FF&amp;ls=14&amp;lb=false&amp;id=true&amp;dc=4BC93C&amp;ds=14&amp;idt=false&amp;dtc=9E42A8&amp;dts=12" border="0" hspace="0" vspace="0" frameborder="no" marginwidth="0" marginheight="0" style="border:0; padding:0; margin:0; width:1000px; height:360px;" id="rssOutput">Reading RSS Feed ...</iframe></div><div style="text-align:right;margin-bottom:0;border-top:0px solid #333333;" id="widgetbottom"><span style="font-size:70%"><a href="http://www.rssfeedwidget.com">rss feed widget</a>&nbsp;</span><br></div></div>
+    </td>
+  </tr>
+</table>
+</font>
+</BODY>
+</HTML>
