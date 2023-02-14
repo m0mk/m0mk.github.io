@@ -1,17 +1,45 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
 <HTML>
 	<HEAD>
-
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="3600" id="metaRefresh">    
 		<TITLE>Getting Ready
 		</TITLE>
 		<STYLE>
 		body {
 		  font-family: Sans-Serif;
 		}
+    #refresh{
+      cursor: pointer;
+    }
+		.cell3d {
+      border-style: outset;
+      border-width: 1px;
+      border-color: silver;
+      background-color: ghostwhite; <!-- lightblue; -->
+		}
+		html {zoom: 125%;}
 		</STYLE>
 		<script language="JavaScript" src="http://www.geoplugin.net/javascript.gp" type="text/javascript"></script>
-		<script language="JavaScript">    
+		<script language="JavaScript">
+		/* grab_ComicRSS.js */
+      function pullComic(myDiv,comic,height,days=55) {
+        document.getElementById(myDiv).innerHTML
+          ='<div id="widgetmain" style="text-align:left;overflow-y:auto;overflow-x:hidden;width:950px;background-color:#transparent; border:0px solid #333333;"><div id="rsswidget" '
+          + ' style="height:' + height
+          + 'px;"><iframe src="http://us1.rssfeedwidget.com/getrss.php?time=1596929274508&amp;x=https%3A%2F%2Fwww.comicsrss.com%2Frss%2F'
+          + comic + '.rss&amp;w=950&amp;'
+          + 'h=' + (height+0)
+          + '&amp;bc=333333&amp;bw=0&amp;bgc=transparent&amp;m='+ days +'&amp;it=true&amp;t=(default)&amp;tc=CC5014&amp;ts=16&amp;tb=transparent&amp;il=true&amp;'
+          + 'lc=0000FF&amp;ls=14&amp;lb=false&amp;id=true&amp;dc=4BC93C&amp;ds=14&amp;idt=false&amp;dtc=9E42A8&amp;dts=12" border="0" hspace="0" vspace="0" frameborder="no" '
+          + ' marginwidth="0" marginheight="0" style="border:0; padding:0; margin:0; width:950px;'
+          + ' height:' + height
+          + 'px;" id="rssOutput">Reading RSS Feed ...</iframe></div><div style="text-align:right;margin-bottom:0;border-top:0px solid #333333;"'
+          + ' id="widgetbottom"><span style="font-size:70%"><a href="http://www.rssfeedwidget.com">rss feed widget</a>&nbsp;</span><br></div></div>'
+      }
+		</script>
+		<script language="JavaScript">
+      /* grab_DateTime.js */
 			/*
 			  Author:		Robert Hashemian (http://www.hashemian.com/)
 			  Modified by:	Munsifali Rashid (http://www.munit.co.uk/)
@@ -79,24 +107,34 @@
 				document.getElementById(myDiv).innerHTML = "Time's Up!";
 			  }
 			}
+			
+			function endOfMonth(date) {
+			// https://www.w3resource.com/javascript-exercises/javascript-date-exercise-53.php
+        return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      }
+			
 		</script>
 	</HEAD>
 <BODY>
 <font style="sans-serif">
-<big><big><center><div id="$VER:">#[015]# Welcome/أهلاً to <span id="NowBox">_NowBox<script lang="javascript">refreshClock("NowBox");</script></span></div></center></big></big>
-<table>
+<table border=0>
   <tr valign="top">
     <td valign="top">
-      <table width="100%" height="47%" border="1">
+      <table width="100%" height="47%" border="0">
         <tr valign="top">
-        <td width="50%">
+          <td class="cell3d">
+          <center>Welcome/أهلاً<br><small><small><span id="NowBox">_NowBox<script lang="javascript">refreshClock("NowBox");</script></span></small></small></center>
+          </td>
+        </tr>
+        <tr valign="top">
+        <td width="50%" class="cell3d">
           <center>
           <big>
-          <big>
-          <big>
+          <big>          
           You have<br>
           <big>
           <big>
+          <big><big>
             <div id="clock1">[clock1]</div>
             <script lang="javascript">
               var today	= new Date();
@@ -104,18 +142,18 @@
               //Extract the date and Format it to YYYY/MM/DD
               var year = today.getFullYear();
 
-              // if the month is less than 10, add leading 0; value is zero based
+              // if the month is less than 10, add leading 0; value is ZERO based
               var month = ((today.getMonth() + 1) < 10 ? '0' : '')
                           + (today.getMonth() + 1) ;  
 
-              // if the day is less than 10, add leading 0; value is non-zero based
+              // if the day is less than 10, add leading 0; value is NON-zero based
               var day = ((today.getDate()) < 10 ? '0' : '')
                           + (today.getDate()) ;   
 
               var todaysEnd = month + '/' + day + '/'+ year + " 11:00 PM";
               StartCountDown("clock1",todaysEnd)// -0400")
             </script>
-          </big>
+          </big></big>
           </big>
           </big>
           Left before end of day
@@ -125,7 +163,7 @@
         </td>
           </tr>
           <tr>
-          <td>
+          <td class="cell3d">
 			<div id="coords">
 			</div> 	
 			<div id="prayers">
@@ -172,6 +210,12 @@
 				initPrayerTimes(position.coords.latitude,position.coords.longitude);
 			}
 			
+			function appendLeadingZeroes(n){
+        if(n <= 9){
+          return "0" + n;
+        }
+        return n
+      }
 
 			</script>
 			
@@ -190,18 +234,27 @@
           </td>
           </tr>
           <tr>
-        <td width="50%">
+        <td class="cell3d">
           <center>
-          <big>
           <big>
           <big>
           You have<br>
           <big>
           <big>
+          <big><big>
             <div id="clock2">[clock2]</div>
-            <script lang="javascript">StartCountDown("clock2","08/30/2020 11:00 PM","%%D%% Days...")// -0400")
+            <script lang="javascript">
+              dt = endOfMonth(new Date());
+              
+              StartCountDown("clock2",
+                dt.getFullYear() 
+                + "-" 
+                + appendLeadingZeroes(dt.getMonth()+1)
+                + "-"
+                + appendLeadingZeroes(dt.getDate())
+                + " 23:59:59","%%D%% Days...")// -0400")
             </script>
-          </big>
+          </big></big>
           </big>
           </big>
           Left before end of the month
@@ -211,30 +264,50 @@
         </td>
         </tr>
         <tr>
-          <td>
-                  <div>
-                    <iframe src="https://to-do.live.com/tasks/AQMkADAwATNiZmYAZC05YWEAOS00NWU4LTAwAi0wMAoALgAAA5tfs3ybhbtHhQhAEJS47MIBAM-DtqMlpwdCrxu0I5jh5AUAAxoF9QcAAAA=">
-                      todo list
-                    </iframe>
-                  </div>
+          <td class="cell3d">
+            <i>Shortcuts</i>
+            <ul>
+              <li><a href="https://bit.ly/scriptlets">scriptlets</a>
+              <li><a href="https://bit.ly/qqScripsXL">Scriptlets▶</a>
+              <li><a href="https://bit.ly/mk-prayerlog">mk-prayerlog</a>
+              <li><a href="https://bit.ly/grabgist">grabgist</a>
+              <li><a href="https://to-do.live.com/tasks/AQMkADAwATNiZmYAZC05YWEAOS00NWU4LTAwAi0wMAoALgAAA5tfs3ybhbtHhQhAEJS47MIBAM-DtqMlpwdCrxu0I5jh5AUAAxoF9QcAAAA=">Todo</a>
+              <li><a id="refresh" onClick="window.location.reload();" style="color :blue; "><u>Refresh Page</u></button>
+            </ul>
+          </td>
+        </tr>
+        <tr valign="top">
+          <td class="cell3d"><small><i>$VER:</i><span id="$VER:">[023.fork]</span></small>
           </td>
         </tr>
         <tr>
           <td>
-            <i>Shortcuts</i>
-            <ul>
-              <li><a href="https://bit.ly/scriptlets">scriptlets</a>
-              <li><a href="https://bit.ly/mk-prayerlog">mk-prayerlog</a>
-              <li><a href="https://bit.ly/grabgist">grabgist</a>
-            </ul>
+                  <!-- <div><i>Todo list may show up here eventually</i> -->
+                    <!-- iframe src="https://to-do.live.com/tasks/AQMkADAwATNiZmYAZC05YWEAOS00NWU4LTAwAi0wMAoALgAAA5tfs3ybhbtHhQhAEJS47MIBAM-DtqMlpwdCrxu0I5jh5AUAAxoF9QcAAAA=">
+                      todo list
+                    </iframe -->
+                  </div>
           </td>
         </tr>
         </table>
     </td>
     <td>
-      <div id="widgetmain" style="text-align:left;overflow-y:auto;overflow-x:hidden;width:1000px;background-color:#transparent; border:0px solid #333333;"><div id="rsswidget" style="height:240px;"><iframe src="http://us1.rssfeedwidget.com/getrss.php?time=1596929274508&amp;x=https%3A%2F%2Fwww.comicsrss.com%2Frss%2Fpeanuts.rss&amp;w=1000&amp;h=360&amp;bc=333333&amp;bw=0&amp;bgc=transparent&amp;m=14&amp;it=true&amp;t=(default)&amp;tc=CC5014&amp;ts=16&amp;tb=transparent&amp;il=true&amp;lc=0000FF&amp;ls=14&amp;lb=false&amp;id=true&amp;dc=4BC93C&amp;ds=14&amp;idt=false&amp;dtc=9E42A8&amp;dts=12" border="0" hspace="0" vspace="0" frameborder="no" marginwidth="0" marginheight="0" style="border:0; padding:0; margin:0; width:1000px; height:360px;" id="rssOutput">Reading RSS Feed ...</iframe></div><div style="text-align:right;margin-bottom:0;border-top:0px solid #333333;" id="widgetbottom"><span style="font-size:70%"><a href="http://www.rssfeedwidget.com">rss feed widget</a>&nbsp;</span><br></div></div>
-      <div id="widgetmain" style="text-align:left;overflow-y:auto;overflow-x:hidden;width:1000px;background-color:#transparent; border:0px solid #333333;"><div id="rsswidget" style="height:355px;"><iframe src="http://us1.rssfeedwidget.com/getrss.php?time=1596928636109&amp;x=https%3A%2F%2Fwww.comicsrss.com%2Frss%2Fgarfield.rss&amp;w=1000&amp;h=400&amp;bc=333333&amp;bw=0&amp;bgc=transparent&amp;m=14&amp;it=true&amp;t=(default)&amp;tc=CC5014&amp;ts=16&amp;tb=transparent&amp;il=true&amp;lc=0000FF&amp;ls=14&amp;lb=false&amp;id=true&amp;dc=4BC93C&amp;ds=14&amp;idt=false&amp;dtc=9E42A8&amp;dts=12" border="0" hspace="0" vspace="0" frameborder="no" marginwidth="0" marginheight="0" style="border:0; padding:0; margin:0; width:1000px; height:355px;" id="rssOutput">Reading RSS Feed ...</iframe></div><div style="text-align:right;margin-bottom:0;border-top:0px solid #333333;" id="widgetbottom"><span style="font-size:70%"><a href="http://www.rssfeedwidget.com">rss feed widget</a>&nbsp;</span><br></div></div>
-      <div id="widgetmain" style="text-align:left;overflow-y:auto;overflow-x:hidden;width:1000px;background-color:#transparent; border:0px solid #333333;"><div id="rsswidget" style="height:360px;"><iframe src="http://us1.rssfeedwidget.com/getrss.php?time=1596929274508&amp;x=https%3A%2F%2Fwww.comicsrss.com%2Frss%2Fdilbert.rss&amp;w=1000&amp;h=360&amp;bc=333333&amp;bw=0&amp;bgc=transparent&amp;m=14&amp;it=true&amp;t=(default)&amp;tc=CC5014&amp;ts=16&amp;tb=transparent&amp;il=true&amp;lc=0000FF&amp;ls=14&amp;lb=false&amp;id=true&amp;dc=4BC93C&amp;ds=14&amp;idt=false&amp;dtc=9E42A8&amp;dts=12" border="0" hspace="0" vspace="0" frameborder="no" marginwidth="0" marginheight="0" style="border:0; padding:0; margin:0; width:1000px; height:360px;" id="rssOutput">Reading RSS Feed ...</iframe></div><div style="text-align:right;margin-bottom:0;border-top:0px solid #333333;" id="widgetbottom"><span style="font-size:70%"><a href="http://www.rssfeedwidget.com">rss feed widget</a>&nbsp;</span><br></div></div>
+      <table border="0"> <!-- this empty table container is a mere kludge to align cellpadding/cellspacing between the left column and this right column of the page -->
+        <tr>
+          <td class="cell3d">
+            <div id="widgetPeanuts"></div>
+            <div id="widgetDilbert"></div>
+            <div id="widgetGarfield"></div>
+            <div id="widgetCalvin"></div>
+            <script lang="JavaScript">
+              pullComic("widgetPeanuts","peanuts",185)//240
+              pullComic("widgetDilbert","dilbert",265)//330
+              pullComic("widgetGarfield","garfield",250)//310
+              pullComic("widgetCalvin","calvinandhobbes",265)//335
+            </script>
+          </td>
+        </tr>
+      </table>
     </td>
   </tr>
 </table>
